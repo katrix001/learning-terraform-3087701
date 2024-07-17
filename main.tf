@@ -24,7 +24,7 @@ resource "aws_instance" "blog" {
 }
 
 resource "aws_s3_bucket" "test_bucket"{
-  Name = "test-bucket"
+  bucket = "test-bucket"
   acl = "private"
   tags = {
   Name = "tf_test_bucket"

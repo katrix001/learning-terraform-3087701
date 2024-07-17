@@ -22,3 +22,13 @@ resource "aws_instance" "blog" {
     Name = "HelloWorld"
   }
 }
+
+resource "aws_s3_bucket" "test_bucket"{
+  Name = "test-bucket"
+  acl = "private"
+  tags = {
+  Name = "tf_test_bucket"
+  created_by = "jacks"
+}
+
+}

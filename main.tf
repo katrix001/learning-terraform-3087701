@@ -14,21 +14,58 @@ data "aws_ami" "app_ami" {
   owners = ["979382823631"] # Bitnami
 }
 
+data "aws_vpc" "default" {
+  default = true
+}
+
+
 resource "aws_instance" "blog" {
   ami           = data.aws_ami.app_ami.id
   instance_type = var.instance_type
+
+  vpc_security_group_ids = [aws_security_group.blog.id]
 
   tags = {
     Name = "HelloWorld"
   }
 }
 
-resource "aws_s3_bucket" "test_bucket"{
-  bucket = "test-bucket-20240717-jack"
-  acl = "private"
-  tags = {
-  Name = "tf_test_bucket"
-  created_by = "jacks"
-}
+resource "aws_security_group" "blog"{
+  name = "blog"
+  description = "Allow HTTP and HTTPS in. Allow everything out"
+  vpc_id = data.aws_vpc.default.id
 
 }
+
+resource "aws_security_group_rule" "blog_http_in" {
+  type = "ingress"
+  from_port = 80
+  to_protocol = 80
+  protocol = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = aws_security_group.blog.id 
+}
+
+
+resource "aws_security_group_rule" "blog_http_in" {
+  type = "ingress"
+  from_port = 443
+  to_protocol = 443
+  protocol = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = aws_security_group.blog.id 
+}
+
+resource "aws_security_group_rule" "blog_http_out" {
+  type = "egress"
+  from_port = 0
+  to_protocol = 0
+  protocol = -1
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = aws_security_group.blog.id 
+}
+
+

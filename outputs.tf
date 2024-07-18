@@ -11,3 +11,6 @@ output "public_dns" {
 output "sec_gr_id" {
   value = module.blog_sg_security-group.security_group_id
 }
+output "m_vpc_id" {
+  value = module.blog_vpc.vpc_id
+}

@@ -42,7 +42,7 @@ resource "aws_instance" "blog" {
   instance_type = var.instance_type
   subnet_id = module.blog_vpc.public_subnets[0]
 
-  vpc_security_group_ids = [module.blog_sg_security-group.security_group_id]
+  vpc_security_group_ids = [module.blog_sg.security_group_id]
 
   tags = {
     Name = "HelloWorld"
@@ -59,7 +59,7 @@ module "blog_alb" {
   vpc_id  = module.blog_vpc.vpc_id
   subnets = module.blog_vpc.public_subnets
 
-  security_groups = ["module.blog_sg_security-group.security_group_id"]
+  security_groups = ["module.blog_sg.security_group_id"]
 
 
   listeners = {
@@ -79,7 +79,7 @@ module "blog_alb" {
       name_prefix      = "blog"
       protocol         = "HTTP"
       port             = 80
-      target_type      = "ip"
+      target_type      = "instance"
       target_id        = aws_instance.blog.id
     }
   }
@@ -93,7 +93,7 @@ module "blog_alb" {
 
 
 
-module "blog_sg_security-group" {
+module "blog_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.1.2"
   name = "blog_new"

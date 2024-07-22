@@ -36,26 +36,6 @@ module "blog_vpc" {
 }
 
 
-
-module "autoscaling" {
-  source  = "terraform-aws-modules/autoscaling/aws"
-  version = "7.7.0"
-  # insert the 1 required variable here
-
-  name = "blog"
-  min_size = 1
-  max_size = 2
-
-  vpc_zone_identifier = module.blog_vpc.public_subnets
-  target_group_arns = moudle.blog_alb.target_group_arns
-  security_groups    = [modules.blog_sg.security_group_id]
-
-  image_id     = data.aws_ami.app_ami.id
-  instance_type   = var.instance_type
-}
-
-
-
 module "blog_alb" {
   source = "terraform-aws-modules/alb/aws"
 
@@ -108,4 +88,24 @@ module "blog_sg" {
   egress_cidr_blocks = ["0.0.0.0/0"]
 
 }
+
+
+
+module "autoscaling" {
+  source  = "terraform-aws-modules/autoscaling/aws"
+  version = "7.7.0"
+  # insert the 1 required variable here
+
+  name = "blog"
+  min_size = 1
+  max_size = 2
+
+  vpc_zone_identifier = module.blog_vpc.public_subnets
+  target_group_arns = moudle.blog_alb.target_group_arns
+  security_groups    = [modules.blog_sg.security_group_id]
+
+  image_id     = data.aws_ami.app_ami.id
+  instance_type   = var.instance_type
+}
+
 

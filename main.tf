@@ -39,7 +39,7 @@ module "blog_vpc" {
 module "blog_alb" {
   source = "terraform-aws-modules/alb/aws"
 
-  name    = "blog-alb"
+  name    = "blog_alb"
   vpc_id  = module.blog_vpc.vpc_id
   subnets = module.blog_vpc.public_subnets
 
@@ -79,7 +79,7 @@ module "blog_alb" {
 module "blog_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.1.2"
-  name = "blog_new"
+  name = "blog_sg"
   
   vpc_id = module.blog_vpc.vpc_id
   ingress_rules = ["http-80-tcp", "https-443-tcp"]
